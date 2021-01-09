@@ -2,14 +2,32 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\Models\Jwt;
+use Illuminate\Support\Facades\Crypt;
 
 class AppController extends Controller
 {
+    protected $secret;
+
+    public function __construct()
+    {
+        $this->secret = env('APP_KEY');
+    }
+
+    public function register(Request $request)
+    {
+        $secret = $this->secret;
+        $now = Carbon::now();
+
+        $token = $this->nextToken(0, $now->month, FALSE, $request->secret);
+        
+        return response()->json(['status' => 'Register success', 'token' => $token], 200);
+    }
 
     public function encode(Request $request)
     {
-        $secret = $this->getSecret();
+        $secret = Crypt::decrypt($request->get('secret'));
 
         $token = (new Jwt)->encodeToken($request->toArray(), $secret);
 
@@ -18,7 +36,7 @@ class AppController extends Controller
 
     public function decode(Request $request)
     {
-        $secret = $this->getSecret();
+        $secret = Crypt::decrypt($request->get('secret'));
         $token = $request->token;
         $response = (new Jwt)->decodeToken($token, $secret);
 
@@ -26,11 +44,25 @@ class AppController extends Controller
         {
             return response()->json(['status' => 'Token failed'], 409);
         }
+
+        // $nextToken = $this->nextToken($request->get('ant_req'), $request->get('mnt_req'), $request->get('premium'), $secret);
+        
         return response()->json(['status' => 'Token accepted', 'data' => $response], 200);
     }
 
-    private function getSecret()
+    private function nextToken($ant_req, $mnt_req, $premium, $secret)
     {
-        return "9WXGnDzAQMG9gvQrcyP3YNVyQdEARPab";
+        $secret = $this->secret;
+        $payload =
+        [
+            'ant_req' => $ant_req,
+            'mnt_req' => $mnt_req,
+            'premium' => $premium,
+            'secret' => Crypt::encrypt($secret),
+        ];
+
+        return (new Jwt)->encodeToken($payload, $secret);
+
     }
+
 }
