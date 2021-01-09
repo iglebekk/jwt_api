@@ -24,7 +24,7 @@ class AppController extends Controller
 
         if(!$response)
         {
-            return response()->json(['status' => 'Token failed'], 200);
+            return response()->json(['status' => 'Token failed'], 409);
         }
         return response()->json(['status' => 'Token accepted', 'data' => $response], 200);
     }
