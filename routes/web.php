@@ -1,5 +1,7 @@
 <?php
 
+
+
 /** @var \Laravel\Lumen\Routing\Router $router */
 
 /*
@@ -15,4 +17,12 @@
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
+});
+
+$router->group(['prefix' => 'api', 'middleware' => 'token'], function () use ($router) {
+ 
+    $router->get('encode', ['uses' => 'AppController@encode']);
+    $router->get('decode', ['uses' => 'AppController@decode']);
+ 
+
 });
