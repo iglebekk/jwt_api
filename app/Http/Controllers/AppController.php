@@ -20,7 +20,16 @@ class AppController extends Controller
         $secret = $this->secret;
         $now = Carbon::now();
 
-        $token = $this->nextToken(0, $now->month, FALSE, $request->secret);
+        $payload =
+        [
+            'ant_req' => $ant_req,
+            'mnt_req' => $mnt_req,
+            'premium' => $premium,
+            'secret' => Crypt::encrypt($secret),
+        ];
+
+        $token = (new Jwt)->encodeToken($payload, $secret);
+
         
         return response()->json(['status' => 'Register success', 'token' => $token], 200);
     }
@@ -44,25 +53,8 @@ class AppController extends Controller
         {
             return response()->json(['status' => 'Token failed'], 409);
         }
-
-        // $nextToken = $this->nextToken($request->get('ant_req'), $request->get('mnt_req'), $request->get('premium'), $secret);
         
         return response()->json(['status' => 'Token accepted', 'data' => $response], 200);
-    }
-
-    private function nextToken($ant_req, $mnt_req, $premium, $secret)
-    {
-        $secret = $this->secret;
-        $payload =
-        [
-            'ant_req' => $ant_req,
-            'mnt_req' => $mnt_req,
-            'premium' => $premium,
-            'secret' => Crypt::encrypt($secret),
-        ];
-
-        return (new Jwt)->encodeToken($payload, $secret);
-
     }
 
 }
