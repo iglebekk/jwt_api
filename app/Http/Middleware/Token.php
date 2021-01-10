@@ -20,7 +20,7 @@ class Token
     public function handle($request, Closure $next)
     {
         if(count(explode('.', $request->bearerToken())) < 3) {
-            return response()->json(['status' => 'Bearer Token not JWT format'], 400);
+            return response()->json(['status' => 'token wrong format'], 400);
         }
 
         $secret     = env('APP_KEY');
@@ -33,7 +33,7 @@ class Token
         */
         if(!$result)
         {
-            return response()->json(['status' => 'Bearer Token invalid'], 401);
+            return response()->json(['status' => 'invalid bearer token'], 401);
         }
         
         /**
@@ -54,7 +54,7 @@ class Token
             */
             if($result->ant_req >= env('MAX_REQ'))
             {
-                return response()->json(['status' => 'To many requests this month'], 401);
+                return response()->json(['status' => 'number of requests exceeded limit this month'], 401);
             }
             
             /**

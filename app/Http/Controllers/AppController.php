@@ -31,7 +31,7 @@ class AppController extends Controller
         $token = (new Jwt)->encodeToken($payload, $secret);
 
         
-        return response()->json(['status' => 'Register success', 'token' => $token], 200);
+        return response()->json(['status' => 'success', 'token' => $token], 200);
     }
 
     public function encode(Request $request)
@@ -40,7 +40,7 @@ class AppController extends Controller
 
         $token = (new Jwt)->encodeToken($request->toArray(), $secret);
 
-        return response()->json(['status' => 'Token created', 'token' => $token], 200);
+        return response()->json(['status' => 'success', 'token' => $token], 200);
     }
 
     public function decode(Request $request)
@@ -51,10 +51,10 @@ class AppController extends Controller
 
         if(!$response)
         {
-            return response()->json(['status' => 'Token failed'], 409);
+            return response()->json(['status' => 'failed'], 409);
         }
         
-        return response()->json(['status' => 'Token accepted', 'data' => $response], 200);
+        return response()->json(['status' => 'success', 'data' => $response], 200);
     }
 
 }
