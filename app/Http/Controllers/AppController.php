@@ -43,7 +43,10 @@ class AppController extends Controller
     {
         $secret = Crypt::decrypt($request->get('secret'));
 
-        $token = (new Jwt)->encodeToken($request->toArray(), $secret);
+        $payload = $request->toArray();
+        $payload['owner'] = $request->bearerToken();
+
+        $token = (new Jwt)->encodeToken($payload, $secret);
 
         return response()->json(['status' => 'success', 'token' => $token], 200);
     }
@@ -53,7 +56,7 @@ class AppController extends Controller
         $this->validate($request, [
             'token' => 'required',
         ]);
-        
+
         $secret = Crypt::decrypt($request->get('secret'));
         $token = $request->token;
         $response = (new Jwt)->decodeToken($token, $secret);
@@ -61,6 +64,11 @@ class AppController extends Controller
         if(!$response)
         {
             return response()->json(['status' => 'failed'], 409);
+        }
+
+        if($response->owner != $request->bearerToken())
+        {
+            return response()->json(['status' => 'no access to this token'], 422);
         }
         
         return response()->json(['status' => 'success', 'data' => $response], 200);
