@@ -20,7 +20,7 @@ class Token
     public function handle($request, Closure $next)
     {
         if(count(explode('.', $request->bearerToken())) < 3) {
-            return response()->json(['status' => 'token wrong format'], 400);
+            return response()->json(['status' => 'token missing or wrong format'], 400);
         }
 
         $secret     = env('APP_KEY');
