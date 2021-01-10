@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 
 class AppController extends Controller
 {
-    protected $secret;
+    private $secret;
 
     public function __construct()
     {
@@ -17,18 +17,23 @@ class AppController extends Controller
 
     public function register(Request $request)
     {
-        $secret = $this->secret;
-        $now = Carbon::now();
+
+        $this->validate($request, [
+            'secret' => 'required|min:32',
+            'email' => 'required|email',
+        ]);
+        
 
         $payload =
         [
-            'ant_req' => $ant_req,
-            'mnt_req' => $mnt_req,
-            'premium' => $premium,
-            'secret' => Crypt::encrypt($secret),
+            'ant_req' => $request->ant_req,
+            'mnt_req' => Carbon::now()->month,
+            'premium' => $request->premium,
+            'secret' => Crypt::encrypt($request->secret),
+            'email' => $request->email,
         ];
 
-        $token = (new Jwt)->encodeToken($payload, $secret);
+        $token = (new Jwt)->encodeToken($payload, $this->secret);
 
         
         return response()->json(['status' => 'success', 'token' => $token], 200);
