@@ -50,6 +50,10 @@ class AppController extends Controller
 
     public function decode(Request $request)
     {
+        $this->validate($request, [
+            'token' => 'required',
+        ]);
+        
         $secret = Crypt::decrypt($request->get('secret'));
         $token = $request->token;
         $response = (new Jwt)->decodeToken($token, $secret);
