@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use App\Models\Jwt;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Str;
 
 class AppController extends Controller
 {
@@ -26,6 +27,7 @@ class AppController extends Controller
 
         $payload =
         [
+            'uuid' => Str::uuid(),
             'ant_req' => $request->ant_req,
             'mnt_req' => Carbon::now()->month,
             'premium' => $request->premium,
@@ -44,7 +46,7 @@ class AppController extends Controller
         $secret = Crypt::decrypt($request->get('secret'));
 
         $payload = $request->toArray();
-        $payload['owner'] = $request->bearerToken();
+        $payload['uuid'] = $request->get('uuid');
 
         $token = (new Jwt)->encodeToken($payload, $secret);
 
@@ -66,7 +68,7 @@ class AppController extends Controller
             return response()->json(['status' => 'failed'], 409);
         }
 
-        if($response->owner != $request->bearerToken())
+        if($response->uuid != $request->get('uuid'))
         {
             return response()->json(['status' => 'no access to this token'], 422);
         }
