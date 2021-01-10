@@ -19,10 +19,14 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->group(['prefix' => 'api', 'middleware' => 'token'], function () use ($router) {
+$router->group(['prefix' => 'api'], function () use ($router) {
  
-    $router->get('encode', ['uses' => 'AppController@encode']);
-    $router->get('decode', ['uses' => 'AppController@decode']);
+    $router->group(['middleware' => 'token'], function () use ($router){
+        $router->post('encode', ['uses' => 'AppController@encode']);
+        $router->post('decode', ['uses' => 'AppController@decode']);
+    });
+
+    $router->post('register', ['uses' => 'AppController@register']);
  
 
 });
