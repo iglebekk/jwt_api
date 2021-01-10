@@ -1,10 +1,10 @@
 # JWT API
 Don't want to mess about jwt tokens? Send your user data to the API and get a complete JWT in return.
 
-# Autorization
+## Autorization
 You need an access token to be able to use the api. Register to get the access token.
 
-# Register
+## Register
 Method: POST
 Auth: None
 URI: /api/register
@@ -16,16 +16,18 @@ Retur: Access token to be used as a bearer token later
 
 !! If you loose your access token, all Json Web Tokens created with that access token will not be able to be decoded. !!
 
-# Encode
+## Encode
 Method: POST
+
 Auth: Bearer token
+
 URI: /api/encode
 PARAMS:
 ... what ever you want to store in the token
 
 Retur: A Json Web Token with the data stored.
 
-# Decode
+## Decode
 Method: POST
 Auth: Bearer token
 URI: /api/decode
