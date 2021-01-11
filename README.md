@@ -1,54 +1,53 @@
 # JWT API
 Don't want to mess about jwt tokens? Send your user data to the API and get a complete JWT in return.
 
-## Autorization
-You need an access token to be able to use the api. Register to get the access token.
+This is my first project using Lumen and the point of it is to learn the framework.
 
-## Register
+## Installation
+1. Download and upload to web server
+3. Create a .env file og copy .env.example and set up the enviroment. You don't need a database.
+4. !! Set APP_KEY in the .env-file
+5. Run "composer install" in the terminal
+
+## How to use
+First you need a Bearer Token, you get that when you register
+
+### REGISTER
+Path: /register
+
 Method: POST
 
-Auth: None
+Param: "secret" - the secret every JWT will be encoded with, "email" - your email. It's really not in use right now, but for the future we can pull the email and drop it in database if we want
 
-URI: /api/register
+Retur: 200; status=success, token=your-bearer-token
 
-### PARAMS:
+To encode data and create a JSON Web Token you'll run encode
 
-@secret This is the string the api will use to protect your tokens. Required.
+### ENCODE
+Path: /encode
 
-@email Your email. Required.
-
-
-### Retur: 
-Access token to be used as a bearer token later
-
-!! If you loose your access token, all Json Web Tokens created with that access token will not be able to be decoded. !!
-
-## Encode
 Method: POST
 
-Auth: Bearer token
+Param: every datafield you want to store in the token, you send as a parameter.
 
-URI: /api/encode
+Eks: user_id=123, user_name=JohnDoe
 
-### PARAMS:
-... what ever you want to store in the token
+Retur: 200; status=success, token=your-JSON-Web-Token
 
-### Retur: 
-A Json Web Token with the data stored.
+Decoding? You get the point...
 
-## Decode
+### DECODE
+Path: /decode
+
 Method: POST
 
-Auth: Bearer token
+Param: token=the-JSON-Web-Token
 
-URI: /api/decode
+Retur:
+409; status=failed, The JSON Web Token is not valid.
 
-### PARAMS:
-@token The Json Web Token you want to decode.
+422; status=no access on this token. The Bearer Token is not the same used to create the JWT
 
-### Return
-status:failed - the token is not correct and it may be altered.
+200; status=success,data=your-data. The token is valid and you'll get your data in retur.
 
-status:no access to this token - the token was created with a different user/bearer token
 
-status:success & data[] - everything went fine and the encoded data is decoded.
