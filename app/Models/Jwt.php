@@ -18,7 +18,7 @@ class Jwt extends Model
 
     public function encodeToken($data, $secret)
     {
-        $secret = env('APP_KEY') . "9WXGnDzAQMG9gvQrcyP3YNVyQdEARPab";
+        $secret = $secret . env('APP_KEY');
 
         $header = $this->encodeToBase64UrlString(json_encode(['typ' => 'JWT', 'alg' => 'HS256']));
         $payload = $this->encodeToBase64UrlString(json_encode($data));
