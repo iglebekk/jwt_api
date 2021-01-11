@@ -23,7 +23,9 @@
     <div class="container-md p-5">
         <section>
             <h1>JWT API</h1>
-            <p>A free API for encoding, decoding and verifying JSON Web Tokens.</p>
+            <p>A free API for encoding, decoding and verifying JSON Web Tokens created by Anders Iglebekk. If you want to support this api, please to that at <a href="https://www.paypal.com/pools/c/8vY5J3RnjS?_ga=2.257101515.1925594631.1610399068-1447759950.1610399068" target="_blank">PayPal</a></p>
+        </section>
+        <section>
             <div class="card m-5">
                 <div class="card-header">
                     JSON Web Token
@@ -42,8 +44,79 @@
                 </p>
             </div>
         </div>
-        
     </section>
+    <section>
+        <h2>Documentation</h2>
+        <p>
+            <strong>Base URI:</strong> https://jwt.tolvtemann.no/api
+        </p>
+        <h3>
+            Autorization
+        </h3>
+        <p>
+            Bearer Token
+        </p>
+        <h3>Registration</h3>
+        <p>
+            <span class="badge bg-secondary">Path</span> /register<br />
+            <span class="badge bg-secondary">Auth</span> None<br />
+                <span class="badge bg-secondary">Method</span> POST
+            <h5>
+                Parameter(s)
+            </h5>
+            <p>
+                <span class="badge bg-primary">secret</span> The secret every JSON Web Token will be encoded with. Min 32char. Required<br />
+                    <span class="badge bg-primary">email</span> Your email. Required<br />
+            </p>
+            <h5>
+                Return
+            </h5>
+            <p>
+                <span class="badge bg-success">200</span> status=success, token=your-bearer-token. The token you need to do other requests.
+            </p>
+        </p>
+        <h3>Encode</h3>
+        <p>
+            <span class="badge bg-secondary">Path</span> /encode<br />
+            <span class="badge bg-secondary">Auth</span> Bearer Token<br />
+            <span class="badge bg-secondary">Method</span> POST
+        </p>
+        <h5>
+            Parameter(s)
+        </h5>
+        <p>
+            Make one parameter per data you want to store in the token.<br />
+            Eks: user_id=123, user_name=JohnDoe
+        </p>
+        <h5>
+            Return
+        </h5>
+        <p>
+            <span class="badge bg-success">200</span> status=success, token=your-token. JSON Web Token with the data you sent.
+        </p>
+        <h3>Decode</h3>
+        <p>
+            <span class="badge bg-secondary">Path</span> /decode<br />
+            <span class="badge bg-secondary">Auth</span> Bearer Token<br />
+            <span class="badge bg-secondary">Method</span> POST
+        </p>
+        <h5>
+            Parameter(s)
+        </h5>
+        <p>
+            <span class="badge bg-primary">token</span> The JSON Web Token you want to validate and decode<br />
+        </p>bg-success
+        <h5>
+            Return
+        </h5>
+        <p>
+            <span class="badge bg-danger">409</span> status=failed. The token failed the validation.<br />
+            <span class="badge bg-danger">422</span> status=no access to this token. The Bearer Token is not valid.<br />
+            <span class="badge bg-success">200</span> status=success, data=your-data. The token is valid and the data is returned to you.
+
+        </p>
+    </section>
+    
     
 </div>
 
